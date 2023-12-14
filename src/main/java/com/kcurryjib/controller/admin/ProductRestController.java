@@ -6,45 +6,33 @@ import com.kcurryjib.service.admin.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
-@RequestMapping("/admin/products")
-public class ProductController {
+@RestController
+@RequestMapping("/admin/products/rest")
+public class ProductRestController {
 
    @Autowired
    private ProductService service;
 
    @GetMapping
-   public String getAllProducts(Model model) {
-      List<ProductDto> productsDto = service.getAll();
-
-      model.addAttribute("products", productsDto);
-
-      return "admin/products/all";
+   public ResponseEntity<List<ProductDto>> getProducts() {
+      List<ProductDto> products = service.getAll();
+      return new ResponseEntity<>(products, HttpStatus.OK);
    }
 
    @GetMapping("/{id}")
-   public String getProductId(@PathVariable Long id, Model model) {
+   public ResponseEntity<ProductDto> getProductId(@PathVariable Long id) {
       ProductDto product = service.getProductById(id);
-      model.addAttribute("product", product);
-      return "admin/products/info";
-   }
-
-   @GetMapping("/add")
-   public String addProductForm(Model model) throws ProductException {
-      model.addAttribute("productDto", new ProductDto());
-      return "admin/products/add";
+      return new ResponseEntity<>(product, HttpStatus.OK);
    }
 
    @PostMapping
-   public String addProduct(@RequestBody ProductDto productDto, Model model) throws ProductException {
-      service.addProduct(productDto);
-      return "redirect:/admin/products";
+   public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) throws ProductException {
+      ProductDto product = service.addProduct(productDto);
+      return new ResponseEntity<>(product, HttpStatus.OK);
    }
 
    @PutMapping
