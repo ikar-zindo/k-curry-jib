@@ -2,10 +2,13 @@ package com.kcurryjib.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 
 public class ProductDto {
@@ -14,12 +17,15 @@ public class ProductDto {
    private Long id;
 
    @JsonInclude(JsonInclude.Include.NON_NULL)
+   @NotBlank(message = "Name cannot be blank")
    private String name;
 
    @JsonInclude(JsonInclude.Include.NON_NULL)
+   @NotBlank(message = "Description cannot be blank")
    private String description;
 
    @JsonInclude(JsonInclude.Include.NON_NULL)
+   @DecimalMin(value = "0.01", message = "Price must be greater than or equal to 0.01")
    private BigDecimal price;
 
    @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -124,5 +130,18 @@ public class ProductDto {
 
    public void setOrderProductsDto(List<OrderProductDto> orderProductsDto) {
       this.orderProductsDto = orderProductsDto;
+   }
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      ProductDto that = (ProductDto) o;
+      return isAvailable == that.isAvailable && Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(price, that.price) && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(createdAt, that.createdAt) && Objects.equals(restaurantDto, that.restaurantDto) && Objects.equals(cartProductsDto, that.cartProductsDto) && Objects.equals(orderProductsDto, that.orderProductsDto);
+   }
+
+   @Override
+   public int hashCode() {
+      return Objects.hash(id, name, description, price, imageUrl, createdAt, isAvailable, restaurantDto, cartProductsDto, orderProductsDto);
    }
 }

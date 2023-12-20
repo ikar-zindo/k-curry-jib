@@ -1,6 +1,7 @@
 package com.kcurryjib.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -21,7 +22,7 @@ public class Product {
    @Column(name = "description")
    private String description;
 
-   @Column(name = "price")
+   @Column(name = "price", precision = 8, scale = 2)
    private BigDecimal price;
 
    @Column(name = "image_url")
