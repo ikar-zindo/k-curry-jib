@@ -15,9 +15,6 @@ public class CustomerMapper {
    @Autowired
    private ModelMapper mapper;
 
-
-
-
    // convert to DTO
    public CustomerDto convertToCustomerDto(Customer customer) {
       CustomerDto customerDto = mapper.map(customer, CustomerDto.class);
@@ -34,7 +31,7 @@ public class CustomerMapper {
 //      "id"
 //      "firstName"
 //      "lastName"
-      mapper.createTypeMap(Customer.class, CustomerDto.class)
+      mapper.typeMap(Customer.class, CustomerDto.class)
               .addMappings(m -> m.skip(CustomerDto::setEmail))
               .addMappings(m -> m.skip(CustomerDto::setPassword))
               .addMappings(m -> m.skip(CustomerDto::setPhoneNumber))
@@ -47,7 +44,6 @@ public class CustomerMapper {
               .addMappings(m -> m.skip(CustomerDto::setReviewsDto));
 
       CustomerDto customerDto = mapper.map(customer, CustomerDto.class);
-
 
       return customerDto;
    }
