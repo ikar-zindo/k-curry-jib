@@ -2,9 +2,11 @@ package com.kcurryjib.service.admin;
 
 import com.kcurryjib.config.MapperUtil;
 import com.kcurryjib.dto.RestaurantDto;
+import com.kcurryjib.dto.ReviewDto;
 import com.kcurryjib.entity.Restaurant;
 import com.kcurryjib.exceptions.ProductException;
 import com.kcurryjib.exceptions.RestaurantException;
+import com.kcurryjib.exceptions.ReviewException;
 import com.kcurryjib.mapper.admin.RestaurantMapper;
 import com.kcurryjib.repo.EmployeeRepository;
 import com.kcurryjib.repo.RestaurantRepository;
@@ -12,6 +14,8 @@ import com.kcurryjib.repo.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,26 +23,28 @@ import java.util.Optional;
 @Service
 public class RestaurantService {
 
-   //   @Autowired
    private RestaurantRepository restaurantRepository;
 
-   //   @Autowired
    private RestaurantMapper restaurantMapper;
 
    private EmployeeRepository employeeRepository;
 
    private ReviewRepository reviewRepository;
 
+   private ReviewService reviewService;
+
    @Autowired
    public RestaurantService(RestaurantRepository restaurantRepository,
                             RestaurantMapper restaurantMapper,
                             EmployeeRepository employeeRepository,
-                            ReviewRepository reviewRepository) {
+                            ReviewRepository reviewRepository,
+                            ReviewService reviewService) {
 
       this.restaurantRepository = restaurantRepository;
       this.restaurantMapper = restaurantMapper;
       this.employeeRepository = employeeRepository;
       this.reviewRepository = reviewRepository;
+      this.reviewService = reviewService;
    }
 
    // READ
@@ -65,9 +71,6 @@ public class RestaurantService {
          restaurantDto = MapperUtil.convertlist(List.of(restaurantOptional.get()), restaurantMapper::convertToRestaurantDto).get(0);
       }
 
-//      Restaurant restaurant = restaurantRepository.findById(id).orElse(null);
-//      RestaurantDto restaurantDto = MapperUtil.convertlist(List.of(restaurant), restaurantMapper::convertToRestaurantDto).get(0);
-
       return restaurantDto;
    }
 
@@ -80,11 +83,6 @@ public class RestaurantService {
          restaurantDto = MapperUtil.convertlist(
                  List.of(restaurantOptional.get()), restaurantMapper::showCustomersWithComments).get(0);
       }
-
-
-
-//      Restaurant restaurant = restaurantRepository.findById(id).orElse(null);
-//      RestaurantDto restaurantDto = MapperUtil.convertlist(List.of(restaurant), restaurantMapper::convertToRestaurantDto).get(0);
 
       return restaurantDto;
    }
@@ -178,5 +176,38 @@ public class RestaurantService {
       } else {
          throw new ProductException("The ID of the restaurant to be deleted is missing!");
       }
+   }
+
+   // Aggregation
+   public int getNumberOfReviewsByRestaurantId(Long id) throws ReviewException {
+      RestaurantDto restaurantDto = showWithComments(id);
+
+      if (restaurantDto != null && restaurantDto.getReviewsDto() != null) {
+         return restaurantDto.getReviewsDto().size();
+      }
+      return 0;
+   }
+
+   public BigDecimal getAverageRatingByRestaurantId(Long id) throws ReviewException {
+      RestaurantDto restaurantDto = showWithComments(id);
+
+      if (restaurantDto != null && restaurantDto.getReviewsDto() != null && !restaurantDto.getReviewsDto().isEmpty()) {
+         BigDecimal sum = BigDecimal.ZERO;
+         int numberOfReviews = restaurantDto.getReviewsDto().size(); // save the number of reviews
+
+         for (ReviewDto review : restaurantDto.getReviewsDto()) {
+            BigDecimal rating = review.getRating();
+
+            if (rating != null) { // check that the rating is not null
+               sum = sum.add(rating);
+            }
+         }
+
+         if (numberOfReviews != 0) { // check that the number of reviews is not equal to avoid division by zero
+            return sum.divide(BigDecimal.valueOf(numberOfReviews), 1, RoundingMode.HALF_UP);
+         }
+      }
+
+      return BigDecimal.ZERO;
    }
 }

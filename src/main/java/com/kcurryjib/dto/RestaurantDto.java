@@ -2,9 +2,12 @@ package com.kcurryjib.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kcurryjib.entity.Restaurant;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 
@@ -170,5 +173,55 @@ public class RestaurantDto {
 
    public void setEmployeesDto(List<EmployeeDto> employeesDto) {
       this.employeesDto = employeesDto;
+   }
+
+   // Builder
+   public static class Builder {
+      private RestaurantDto restaurantDto = new RestaurantDto();
+
+      public Builder id(Long id) {
+         restaurantDto.id = id;
+         return this;
+      }
+      public Builder name(String name) {
+         restaurantDto.name = name;
+         return this;
+      }
+      public Builder address(String address) {
+         restaurantDto.address = address;
+         return this;
+      }
+      public Builder phoneNumber(String phoneNumber) {
+         restaurantDto.phoneNumber = phoneNumber;
+         return this;
+      }
+      public Builder openingHours(String openingHours) {
+         restaurantDto.openingHours = openingHours;
+         return this;
+      }
+      public Builder cuisineType(String cuisineType) {
+         restaurantDto.cuisineType = cuisineType;
+         return this;
+      }
+      public Builder description(String description) {
+         restaurantDto.description = description;
+         return this;
+      }
+      public Builder socialMediaLinks(String socialMediaLinks) {
+         restaurantDto.socialMediaLinks = socialMediaLinks;
+         return this;
+      }
+      public Builder isOpen(Boolean isOpen) {
+         restaurantDto.isOpen = isOpen;
+         return this;
+      }
+
+      public RestaurantDto build() {
+         return restaurantDto;
+      }
+   }
+
+   public static Builder builder() {
+      return new Builder();
    }
 }
