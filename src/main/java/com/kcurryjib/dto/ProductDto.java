@@ -2,10 +2,7 @@ package com.kcurryjib.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.Length;
 
 import java.math.BigDecimal;
@@ -20,16 +17,16 @@ public class ProductDto {
    private Long id;
 
    @JsonInclude(JsonInclude.Include.NON_NULL)
-   @NotBlank(message = "{validation.product.name}")
-   @Length(max = 25, message = "{validation.product.name.length}")
+   @NotEmpty(message = "{validation.length.empty}")
+   @Length(max = 25, message = "{validation.length.max.25}")
    private String name;
 
    @JsonInclude(JsonInclude.Include.NON_NULL)
-   @NotBlank(message = "{validation.product.description.notnull}")
-   @Length(max = 1000, message = "{validation.product.description.length}")
+   @NotEmpty(message = "{validation.length.empty}")
+   @Length(max = 1000, message = "{validation.length.max.1000}")
    private String description;
 
-   @NotNull(message = "{validation.product.price.notnull}")
+   @NotNull(message = "{validation.value.null}")
    @DecimalMin(value = "0.01", message = "{validation.product.price}")
    @DecimalMax(value = "10000", message = "{validation.product.price.value}")
    private BigDecimal price;
@@ -45,7 +42,7 @@ public class ProductDto {
 
 //   @JsonInclude(JsonInclude.Include.NON_NULL)
    @JsonProperty("restaurant")
-   @NotNull(message = "{validation.product.restaurant.notnull}")
+   @NotNull(message = "{validation.value.null}")
    private RestaurantDto restaurantDto;
 
    @JsonInclude(JsonInclude.Include.NON_NULL)

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kcurryjib.entity.enums.Role;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 
@@ -17,30 +19,36 @@ public class EmployeeDto {
    private Long id;
 
    @JsonInclude(JsonInclude.Include.NON_NULL)
-   @Length(max = 30, message = "{validation.employee.name.length}")
+   @NotEmpty(message = "{validation.length.empty}")
+   @Length(max = 30, message = "{validation.length.max.30}")
    private String firstName;
 
    @JsonInclude(JsonInclude.Include.NON_NULL)
-   @Length(max = 30, message = "{validation.employee.name.length}")
+   @NotEmpty(message = "{validation.length.empty}")
+   @Length(max = 30, message = "{validation.length.max.30}")
    private String lastName;
 
    @JsonInclude(JsonInclude.Include.NON_NULL)
+   @NotEmpty(message = "{validation.length.empty}")
    @Email(message = "Invalid email")
    private String email;
 
    @JsonInclude(JsonInclude.Include.NON_NULL)
-   @Length(max = 60, message = "{validation.employee.nickname.length}")
+   @NotEmpty(message = "{validation.length.empty}")
+   @Length(max = 60, message = "{validation.length.max.60}")
    private String nickname;
 
    @JsonInclude(JsonInclude.Include.NON_NULL)
    private Role role;
 
    @JsonInclude(JsonInclude.Include.NON_NULL)
-   @Length(max = 120, message = "{validation.employee.password.length}")
+   @NotEmpty(message = "{validation.length.empty}")
+   @Length(max = 120, message = "{validation.length.max.120}")
    private String password;
 
    @JsonInclude(JsonInclude.Include.NON_NULL)
-   @Pattern(regexp = "\\\\+49\\\\d{10}", message = "{validation.employee.phoneNumber.length}")
+   @NotEmpty(message = "{validation.length.empty}")
+   @Pattern(regexp = "\\\\+49\\\\d{10}", message = "{validation.length.max.10}")
    private String phoneNumber;
 
    @JsonInclude(JsonInclude.Include.NON_NULL)
