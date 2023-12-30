@@ -5,14 +5,12 @@ import com.kcurryjib.dto.ProductDto;
 import com.kcurryjib.dto.RestaurantDto;
 import com.kcurryjib.entity.Product;
 import com.kcurryjib.entity.Restaurant;
-import com.kcurryjib.exception.exceptionsList.ProductException;
+import com.kcurryjib.exception.list.ProductException;
 import com.kcurryjib.mapper.admin.ProductMapper;
 import com.kcurryjib.repo.ProductRepository;
 import com.kcurryjib.repo.RestaurantRepository;
-
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,8 +23,6 @@ import java.util.stream.Collectors;
 public class ProductService {
 //   @Autowired
 //   private ModelMapper modelMapper;
-
-   private final Logger LOGGER = LogManager.getLogger(ProductService.class);
 
    private ProductRepository productRepository;
 
@@ -68,21 +64,18 @@ public class ProductService {
 
    // READ
    public ProductDto getProductById(Long id) throws ProductException {
-      LOGGER.log(Level.INFO, "Requested product id={}", id);
-      LOGGER.log(Level.WARN, "Requested product id={}", id);
-      LOGGER.log(Level.ERROR, "Requested product id={}", id);
-
       ProductDto productDto = null;
 
       if (id != null) {
          Optional<Product> productOptional = productRepository.findById(id);
 
          if (productOptional.isPresent()) {
-            productDto = MapperUtil.convertlist(
-                    List.of(productOptional.get()), productMapper::showProductDetails).get(0);
+            productDto = productMapper.showProductDetails(productOptional.get());
+//                    MapperUtil.convertlist(
+//                    List.of(productOptional.get()), productMapper::showProductDetails).get(0);
          } else {
             throw new ProductException(
-                    String.format("Product not found in database with Id=%d", id));
+                    String.format("Product not found in database with id=%d", id));
          }
       } else {
          throw new ProductException("There is no product ID to search for!");

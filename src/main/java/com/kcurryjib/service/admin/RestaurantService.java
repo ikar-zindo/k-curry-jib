@@ -4,15 +4,13 @@ import com.kcurryjib.config.MapperUtil;
 import com.kcurryjib.dto.RestaurantDto;
 import com.kcurryjib.dto.ReviewDto;
 import com.kcurryjib.entity.Restaurant;
-import com.kcurryjib.exception.exceptionsList.ProductException;
-import com.kcurryjib.exception.exceptionsList.RestaurantException;
-import com.kcurryjib.exception.exceptionsList.ReviewException;
+import com.kcurryjib.exception.list.ProductException;
+import com.kcurryjib.exception.list.RestaurantException;
+import com.kcurryjib.exception.list.ReviewException;
 import com.kcurryjib.mapper.admin.RestaurantMapper;
 import com.kcurryjib.repo.EmployeeRepository;
 import com.kcurryjib.repo.RestaurantRepository;
 import com.kcurryjib.repo.ReviewRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,8 +68,9 @@ public class RestaurantService {
       RestaurantDto restaurantDto = null;
 
       if (restaurantOptional.isPresent()) {
-         restaurantDto = MapperUtil.convertlist(
-                 List.of(restaurantOptional.get()), restaurantMapper::convertToRestaurantDto).get(0);
+         restaurantDto = restaurantMapper.convertToRestaurantDto(restaurantOptional.get());
+//                 MapperUtil.convertlist(
+//                 List.of(restaurantOptional.get()), restaurantMapper::convertToRestaurantDto).get(0);
       }
 
       return restaurantDto;
@@ -83,8 +82,9 @@ public class RestaurantService {
       RestaurantDto restaurantDto = null;
 
       if (restaurantOptional.isPresent()) {
-         restaurantDto = MapperUtil.convertlist(
-                 List.of(restaurantOptional.get()), restaurantMapper::showCustomersWithComments).get(0);
+         restaurantDto = restaurantMapper.showCustomersWithComments(restaurantOptional.get());
+//                 MapperUtil.convertlist(
+//                 List.of(restaurantOptional.get()), restaurantMapper::showCustomersWithComments).get(0);
       }
 
       return restaurantDto;

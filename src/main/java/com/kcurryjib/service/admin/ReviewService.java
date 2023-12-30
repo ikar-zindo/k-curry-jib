@@ -7,8 +7,8 @@ import com.kcurryjib.dto.ReviewDto;
 import com.kcurryjib.entity.Customer;
 import com.kcurryjib.entity.Restaurant;
 import com.kcurryjib.entity.Review;
-import com.kcurryjib.exception.exceptionsList.ProductException;
-import com.kcurryjib.exception.exceptionsList.ReviewException;
+import com.kcurryjib.exception.list.ProductException;
+import com.kcurryjib.exception.list.ReviewException;
 import com.kcurryjib.mapper.admin.ReviewMapper;
 import com.kcurryjib.repo.CustomerRepository;
 import com.kcurryjib.repo.RestaurantRepository;
@@ -56,7 +56,9 @@ public class ReviewService {
       ReviewDto reviewDto = null;
 
       if (reviewOptional.isPresent()) {
-         reviewDto = MapperUtil.convertlist(List.of(reviewOptional.get()), reviewMapper::showReviewDtoWithCustomer).get(0);
+         reviewDto = reviewMapper.showReviewDtoWithCustomer(reviewOptional.get());
+//                 MapperUtil.convertlist(
+//                 List.of(reviewOptional.get()), reviewMapper::showReviewDtoWithCustomer).get(0);
       }
 
       return reviewDto;
@@ -162,6 +164,4 @@ public class ReviewService {
          throw new ReviewException("The ID of the review to be deleted is missing!");
       }
    }
-
-
 }
